@@ -342,6 +342,11 @@
   .board-tools{margin-bottom:16px;padding:12px;align-items:center}
   .board-tools input{width:auto;min-width:190px;padding:8px 12px}
   .board-tools select{min-width:132px}
+  .board-tools{display:block}
+  .board-tools .tool-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .board-tools .tool-row-actions{margin-top:11px;padding-top:11px;border-top:1px solid var(--line-soft)}
+  .board-tools .tool-row-actions .checkline:first-of-type{margin-left:auto}
+  .board-tools .board-total{margin-left:12px}
   .checkline{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);white-space:nowrap;text-transform:none;letter-spacing:0;margin:0}
   .checkline input{width:auto;accent-color:var(--lilac)}
   .task{position:relative;overflow:hidden;background:var(--panel-2);border-color:var(--line);min-width:0}
@@ -391,12 +396,6 @@
   .report-tot{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
   .report-tot .stat .big{font-size:34px}
   .export-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
-  .paywhole-row{margin:0 0 16px;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:var(--inset-bg)}
-  .paywhole-toggle{display:flex;align-items:flex-start;gap:9px;cursor:pointer;color:var(--muted);font-size:13.5px;line-height:1.45}
-  .paywhole-toggle input{margin-top:3px;accent-color:var(--gold)}
-  .paywhole-toggle b{color:var(--ink-strong)}
-  .paywhole-line{margin-top:9px;padding-top:9px;border-top:1px dashed var(--line);font-size:13.5px;color:var(--ink)}
-  .paywhole-line b{color:var(--gold)}
   .wrap-title{font-size:21px;color:var(--ink-strong);font-family:var(--display);margin:0 0 2px}
   .wrap-sub{color:var(--muted);font-size:13px;margin:0 0 14px}
   .wrap-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
@@ -1388,21 +1387,26 @@
       <div class="name-preview" id="namePreview"></div>
     </div>
     <div class="board-filter panel board-tools">
-      <span class="filter-label">Find</span>
-      <input id="taskSearch" placeholder="search task names or notes" autocomplete="off">
-      <span class="filter-label">Filter</span>
-      <select id="filterPattern"><option value="">All genes</option></select>
-      <select id="filterBreed"><option value="">All breeds</option></select>
-      <select id="filterAvail" title="Filter by breed availability"><option value="">Any availability</option><option value="live">Live only</option><option value="dev">In development</option><option value="future">Future</option><option value="unset">Untagged</option></select>
-      <select id="taskSort"><option value="custom">Custom order</option><option value="priority">Priority</option><option value="newest">Newest</option><option value="oldest">Oldest</option><option value="hours">Most hours</option><option value="name">Name A–Z</option></select>
-      <select id="taskScopeFilter" class="scope-select" title="Show the exact ownership slice you need"><option value="all">All scope</option><option value="mine">Mine + shared</option><option value="shared">Shared only</option><option value="team">Team / not mine</option><option value="focus">Pinned focus</option><option value="blocked">Blocked</option><option value="unestimated">Needs estimate</option><option value="over">Over my estimate</option></select>
-      <button class="btn sm ghost" id="pinTopTasks" title="Pin the smartest active tasks to the agenda">★ Pin top 3</button>
-      <button class="btn sm ghost" id="benchEstimates" title="Use your logged history to fill missing estimates">Estimate gaps</button>
-      <button class="btn sm ghost" id="sweepReview" title="Move nearly-complete in-progress tasks to review">Sweep review</button>
-      <label class="checkline"><input type="checkbox" id="hideDone"> hide delivered</label>
-      <button class="clearf" id="clearFilter" style="display:none">clear</button>
-      <button class="btn sm ghost" id="archiveDone">Archive delivered</button>
-      <span class="board-total" id="boardTotal"></span>
+      <div class="tool-row">
+        <span class="filter-label">Find</span>
+        <input id="taskSearch" placeholder="search task names or notes" autocomplete="off">
+        <span class="filter-label">Filter</span>
+        <select id="filterPattern"><option value="">All genes</option></select>
+        <select id="filterBreed"><option value="">All breeds</option></select>
+        <select id="filterAvail" title="Filter by breed availability"><option value="">Any availability</option><option value="live">Live only</option><option value="dev">In development</option><option value="future">Future</option><option value="unset">Untagged</option></select>
+        <select id="taskSort"><option value="custom">Custom order</option><option value="priority">Priority</option><option value="newest">Newest</option><option value="oldest">Oldest</option><option value="hours">Most hours</option><option value="name">Name A–Z</option></select>
+        <select id="taskScopeFilter" class="scope-select" title="Show the exact ownership slice you need"><option value="all">All scope</option><option value="mine">Mine + shared</option><option value="shared">Shared only</option><option value="team">Team / not mine</option><option value="focus">Pinned focus</option><option value="blocked">Blocked</option><option value="unestimated">Needs estimate</option><option value="over">Over my estimate</option></select>
+        <button class="clearf" id="clearFilter" style="display:none">clear</button>
+      </div>
+      <div class="tool-row tool-row-actions">
+        <button class="btn sm ghost" id="pinTopTasks" title="Pin the smartest active tasks to the agenda">★ Pin top 3</button>
+        <button class="btn sm ghost" id="benchEstimates" title="Use your logged history to fill missing estimates">Estimate gaps</button>
+        <button class="btn sm ghost" id="sweepReview" title="Move nearly-complete in-progress tasks to review">Sweep review</button>
+        <button class="btn sm ghost" id="archiveDone">Archive delivered</button>
+        <label class="checkline"><input type="checkbox" id="hideDone"> hide delivered</label>
+        <label class="checkline"><input type="checkbox" id="hideBlocked"> hide blocked</label>
+        <span class="board-total" id="boardTotal"></span>
+      </div>
     </div>
     <details class="coverage-panel panel" id="covPanel" open>
       <summary>
@@ -1572,10 +1576,6 @@
         <div class="stat pay"><div class="glow"></div><div class="label">Total pay</div><div class="big" id="repPay">$0.00</div></div>
       </div>
       <div class="recap" id="repRecap" style="display:none"></div>
-      <div class="paywhole-row">
-        <label class="paywhole-toggle"><input type="checkbox" id="payWholeToggle"> <span><b>Whole-hour pay</b> — Blue pays full hours only; the leftover fraction automatically rides into the next period</span></label>
-        <div class="paywhole-line" id="payCarryLine" style="display:none"></div>
-      </div>
       <div class="export-row">
         <button class="btn primary" id="copyReport">📋 Copy report</button>
         <button class="btn" id="wrapBtn">✨ Period Wrapped</button>
@@ -1587,8 +1587,8 @@
     </div>
     <div class="footnote">
       <b>Your data lives only on this computer</b>, saved in this browser.<br>
-      Back up regularly: <a href="#" id="backupBtn" style="color:var(--lilac)">export everything to a file</a> · <a href="#" id="restoreBtn" style="color:var(--lilac)">restore from a backup</a>
-      <input type="file" id="restoreFile" accept=".json,application/json,text/plain" style="display:none">
+      Back up regularly: <a href="#" id="backupBtn" style="color:var(--lilac)">export everything to a file</a> · <a href="#" id="restoreBtn" style="color:var(--lilac)">restore from a backup</a> · <a href="#" id="pasteBtn" style="color:var(--lilac)">paste a backup</a>
+      <input type="file" id="restoreFile" style="display:none">
     </div>
   </section>
 
@@ -1620,6 +1620,18 @@
     <div class="modal-foot">
       <button class="btn ghost" id="rateCancel">Cancel</button>
       <button class="btn primary" id="rateSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="pasteModal">
+  <div class="modal">
+    <h2>Paste a backup</h2>
+    <p class="hint">Open your backup .json in the Files app (or any text viewer), select all the text, copy it, and paste it below.</p>
+    <div class="row"><textarea id="pasteArea" rows="8" style="width:100%;font-family:monospace;font-size:11px" placeholder='{"rate":30,"entries":[...]}'></textarea></div>
+    <div class="modal-foot">
+      <button class="btn ghost" id="pasteCancel">Cancel</button>
+      <button class="btn primary" id="pasteGo">Restore</button>
     </div>
   </div>
 </div>
@@ -1937,44 +1949,6 @@
   function entryInPeriod(e,p){var d=parseISO(e.date);return d.getFullYear()===p.year && d.getMonth()===p.month && (p.half===0?d.getDate()<=15:d.getDate()>=16);}
   function entriesFor(p){return state.entries.filter(function(e){return entryInPeriod(e,p);}).sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:0;});}
   function sumHours(list){return list.reduce(function(t,e){return t+(+e.hours||0);},0);}
-
-  /* ---------- whole-hour pay with carryover ("Blue's math") ---------- */
-  function periodOrd(p){return p.year*24+p.month*2+p.half;}
-  function payChain(){
-    var per={};
-    state.entries.forEach(function(e){
-      var h=+e.hours||0; if(h<=0) return;
-      var p=periodOfDate(parseISO(e.date)), k=periodKey(p);
-      if(!per[k]) per[k]={p:p,raw:0};
-      per[k].raw+=h;
-    });
-    var keys=Object.keys(per).sort(function(a,b){return periodOrd(per[a].p)-periodOrd(per[b].p);});
-    var out={}, carry=0;
-    keys.forEach(function(k){
-      var raw=Math.round(per[k].raw*100)/100;
-      var pool=Math.round((raw+carry)*100)/100;
-      var payable=Math.floor(pool+1e-9);
-      var carryOut=Math.round((pool-payable)*100)/100;
-      out[k]={ord:periodOrd(per[k].p),raw:raw,carryIn:carry,payable:payable,carryOut:carryOut};
-      carry=carryOut;
-    });
-    return out;
-  }
-  function payInfoFor(p){
-    var ch=payChain(), k=periodKey(p);
-    if(ch[k]) return ch[k];
-    /* empty period: remainder rides through unchanged from the last worked period before it */
-    var ord=periodOrd(p), carry=0, best=-1;
-    Object.keys(ch).forEach(function(kk){ if(ch[kk].ord<ord&&ch[kk].ord>best){best=ch[kk].ord;carry=ch[kk].carryOut;} });
-    return {ord:ord,raw:0,carryIn:carry,payable:0,carryOut:carry};
-  }
-  function payCarrySentence(pi){
-    var bits=[fmtHrs(pi.raw)+" h worked"];
-    if(pi.carryIn>0) bits.push(fmtHrs(pi.carryIn)+" h carried in");
-    var s=bits.join(" + ")+" → pays <b>"+pi.payable+" h</b>";
-    s+= pi.carryOut>0 ? " · <b>"+fmtHrs(pi.carryOut)+" h</b> rides to next period" : " · nothing left over";
-    return s;
-  }
 
   function findBreed(id){return state.breeds.find(function(b){return b.id===id;})||null;}
   /* ---------- breed availability ---------- */
@@ -2572,14 +2546,8 @@
       paceNote+=" · on pace for "+fmtHrs(projH)+" h / "+money(projH*state.rate);
     }
     $("sumHoursNote").textContent=paceNote;
-    if(state.pay&&state.pay.whole){
-      var wpi=payInfoFor(cur);
-      $("sumPay").textContent=money(wpi.payable*state.rate);
-      var pn=$("sumPayNote"); if(pn) pn.textContent=wpi.payable+" payable h"+(wpi.carryOut>0?(" · "+fmtHrs(wpi.carryOut)+" h riding forward"):"")+(wpi.carryIn>0?(" · incl. "+fmtHrs(wpi.carryIn)+" h carried in"):"");
-    } else {
-      $("sumPay").textContent=money(hrs*state.rate);
-      var pn2=$("sumPayNote"); if(pn2) pn2.textContent="at current rate";
-    }
+    $("sumPay").textContent=money(hrs*state.rate);
+    var pn2=$("sumPayNote"); if(pn2) pn2.textContent="at current rate";
     $("sumPeriod").textContent=(cur.half===0?"1st – 15th":"16th – end");
     $("sumPeriodRange").textContent=periodRange(cur);
     var due=periodDue(cur);
@@ -2992,11 +2960,12 @@
   if($("taskSort")) $("taskSort").addEventListener("change",renderTasks);
   if($("taskScopeFilter")) $("taskScopeFilter").addEventListener("change",function(){updateClearBtn();renderTasks();});
   if($("hideDone")) $("hideDone").addEventListener("change",renderTasks);
+  if($("hideBlocked")) $("hideBlocked").addEventListener("change",renderTasks);
   if($("archiveDone")) $("archiveDone").addEventListener("click",archiveDoneTasks);
   if($("pinTopTasks")) $("pinTopTasks").addEventListener("click",pinTopSmartTasks);
   if($("benchEstimates")) $("benchEstimates").addEventListener("click",fillMissingEstimatesFromBenchmarks);
   if($("sweepReview")) $("sweepReview").addEventListener("click",sweepAlmostDoneToReview);
-  $("clearFilter").addEventListener("click",function(){filterPatternId="";filterBreedId="";filterAvail="";$("filterPattern").value="";$("filterBreed").value="";if($("filterAvail"))$("filterAvail").value="";if($("taskSearch"))$("taskSearch").value="";if($("taskScopeFilter"))$("taskScopeFilter").value="all";if($("hideDone"))$("hideDone").checked=false;updateClearBtn();renderTasks();});
+  $("clearFilter").addEventListener("click",function(){filterPatternId="";filterBreedId="";filterAvail="";$("filterPattern").value="";$("filterBreed").value="";if($("filterAvail"))$("filterAvail").value="";if($("taskSearch"))$("taskSearch").value="";if($("taskScopeFilter"))$("taskScopeFilter").value="all";if($("hideDone"))$("hideDone").checked=false;if($("hideBlocked"))$("hideBlocked").checked=false;updateClearBtn();renderTasks();});
   document.querySelectorAll("[data-covmode]").forEach(function(b){ b.addEventListener("click",function(){ setCoverageMode(b.getAttribute("data-covmode")); }); });
   if($("covBulkApply")) $("covBulkApply").addEventListener("click",applyCoverageBulk);
   if($("covBulkCreate")) $("covBulkCreate").addEventListener("click",createCoverageBulkMissing);
@@ -3006,7 +2975,7 @@
   if($("covHideResolved")) $("covHideResolved").addEventListener("change",renderCoverage);
   if($("covDensity")) $("covDensity").querySelectorAll("[data-density]").forEach(function(b){ b.addEventListener("click",function(){ covDensity=b.getAttribute("data-density"); $("covDensity").querySelectorAll("[data-density]").forEach(function(x){x.classList.toggle("active",x===b);}); renderCoverage(); }); });
   if($("covCollapseAll")) $("covCollapseAll").addEventListener("click",function(){ covAllCollapsed=!covAllCollapsed; covCollapsed={}; $("covCollapseAll").textContent=covAllCollapsed?"Expand all":"Collapse all"; renderCoverage(); });
-  function updateClearBtn(){ var searching=$("taskSearch")&&$("taskSearch").value.trim(); var hidden=$("hideDone")&&$("hideDone").checked; var scoped=$("taskScopeFilter")&&$("taskScopeFilter").value!=="all"; $("clearFilter").style.display=(filterPatternId||filterBreedId||filterAvail||searching||hidden||scoped)?"inline":"none"; }
+  function updateClearBtn(){ var searching=$("taskSearch")&&$("taskSearch").value.trim(); var hidden=($("hideDone")&&$("hideDone").checked)||($("hideBlocked")&&$("hideBlocked").checked); var scoped=$("taskScopeFilter")&&$("taskScopeFilter").value!=="all"; $("clearFilter").style.display=(filterPatternId||filterBreedId||filterAvail||searching||hidden||scoped)?"inline":"none"; }
   function updateNamePreview(){
     var patternId=$("taskPattern").value, breedId=$("taskBreed").value, pose=$("taskPose").value;
     var name=composeName(patternId,breedId,pose);
@@ -3301,6 +3270,7 @@
     var q=$("taskSearch")?$("taskSearch").value.trim().toLowerCase():"";
     var sortBy=$("taskSort")?$("taskSort").value:"custom";
     var hideDone=$("hideDone")&&$("hideDone").checked;
+    var hideBlocked=$("hideBlocked")&&$("hideBlocked").checked;
     var scopeFilter=$("taskScopeFilter")?$("taskScopeFilter").value:"all";
     var sorted=state.tasks.filter(function(t){return !t.archived;}).sort(function(a,b){
       if(sortBy==="newest") return (b.created||0)-(a.created||0);
@@ -3315,6 +3285,7 @@
       if(filterBreedId && t.breedId!==filterBreedId) return;
       if(filterAvail){ var _bs=breedStatusOf(t.breedId); if(filterAvail==="unset"?!!_bs:_bs!==filterAvail) return; }
       if(hideDone && (t.status==="delivered"||t.status==="done")) return;
+      if(hideBlocked && t.blocked) return;
       if(!taskMatchesScopeFilter(t,scopeFilter)) return;
       if(q && taskSearchText(t).indexOf(q)===-1) return;
       var st=(t.status==="done")?"delivered":t.status;
@@ -3322,7 +3293,7 @@
       cols[s].appendChild(taskCard(t)); counts[s]++;
     });
     $("cntTodo").textContent=counts.todo;$("cntDoing").textContent=counts.doing;$("cntReview").textContent=counts.review;$("cntDone").textContent=counts.delivered;
-    var filtered=(filterPatternId||filterBreedId||filterAvail||q||hideDone||(scopeFilter&&scopeFilter!=="all"));
+    var filtered=(filterPatternId||filterBreedId||filterAvail||q||hideDone||hideBlocked||(scopeFilter&&scopeFilter!=="all"));
     Object.keys(cols).forEach(function(k){ if(counts[k]===0)cols[k].innerHTML='<div class="empty" style="padding:18px;font-size:12.5px">'+(filtered?"none match filter":"empty")+'</div>'; });
     document.querySelectorAll("[data-collapse]").forEach(function(b){b.addEventListener("click",function(){var id=b.getAttribute("data-collapse"); taskExpanded[id]=!(taskExpanded[id]===true); renderTasks();});});
     document.querySelectorAll("[data-togglelog]").forEach(function(b){b.addEventListener("click",function(){var id=b.getAttribute("data-togglelog"); quickLogOpen[id]=!quickLogOpen[id]; renderTasks();});});
@@ -4165,6 +4136,7 @@
   function updateBoardTotals(){
     var q=$("taskSearch")?$("taskSearch").value.trim().toLowerCase():"";
     var hideDone=$("hideDone")&&$("hideDone").checked;
+    var hideBlocked=$("hideBlocked")&&$("hideBlocked").checked;
     var scopeFilter=$("taskScopeFilter")?$("taskScopeFilter").value:"all";
     var shown=state.tasks.filter(function(t){
       if(t.archived) return false;
@@ -4172,6 +4144,7 @@
       if(filterBreedId && t.breedId!==filterBreedId) return false;
       if(filterAvail){ var _bs=breedStatusOf(t.breedId); if(filterAvail==="unset"?!!_bs:_bs!==filterAvail) return false; }
       if(hideDone && (t.status==="delivered"||t.status==="done")) return false;
+      if(hideBlocked && t.blocked) return false;
       if(!taskMatchesScopeFilter(t,scopeFilter)) return false;
       if(q && taskSearchText(t).indexOf(q)===-1) return false;
       return true;
@@ -4361,17 +4334,7 @@
     var list=entriesFor(viewPeriod);
     var hrs=sumHours(list);
     $("repHours").textContent=fmtHrs(hrs)+" h";
-    var whole=!!(state.pay&&state.pay.whole);
-    var tgl=$("payWholeToggle"); if(tgl) tgl.checked=whole;
-    var cl=$("payCarryLine");
-    if(whole){
-      var pi=payInfoFor(viewPeriod);
-      $("repPay").textContent=money(pi.payable*state.rate);
-      if(cl){ cl.innerHTML=payCarrySentence(pi)+(pi.carryIn>0||pi.carryOut>0?"":""); cl.style.display=""; }
-    } else {
-      $("repPay").textContent=money(hrs*state.rate);
-      if(cl){ cl.style.display="none"; cl.innerHTML=""; }
-    }
+    $("repPay").textContent=money(hrs*state.rate);
     var cont=$("repEntries"); cont.innerHTML="";
     if(list.length===0){cont.innerHTML='<div class="empty">No entries in this pay period.</div>';}
     else{ list.forEach(function(e){cont.appendChild(entryRow(e));}); bindEntryActions(cont); }
@@ -4408,16 +4371,8 @@
     lines.push(periodRange(viewPeriod));
     lines.push("Report due: "+(function(){var d=periodDue(viewPeriod);return MONTHS[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear();})());
     lines.push("");
-    if(state.pay&&state.pay.whole){
-      var pi=payInfoFor(viewPeriod);
-      lines.push("Hours worked: "+fmtHrs(pi.raw)+" h"+(pi.carryIn>0?(" (+ "+fmtHrs(pi.carryIn)+" h carried in from last period)"):""));
-      lines.push("Payable this period: "+pi.payable+" hours");
-      lines.push("Estimated pay: "+money(pi.payable*state.rate)+" @ "+money(state.rate)+"/hr");
-      if(pi.carryOut>0) lines.push("Carrying to next period: "+fmtHrs(pi.carryOut)+" h");
-    } else {
-      lines.push("Total: "+fmtHrs(hrs)+" hours");
-      lines.push("Estimated pay: "+money(hrs*state.rate)+" @ "+money(state.rate)+"/hr");
-    }
+    lines.push("Total: "+fmtHrs(hrs)+" hours");
+    lines.push("Estimated pay: "+money(hrs*state.rate)+" @ "+money(state.rate)+"/hr");
     lines.push("");
     lines.push("Breakdown by category:");
     if(list.length===0){ lines.push("- No entries"); }
@@ -4453,26 +4408,12 @@
     save(); checkAchievements();
   });
 
-  /* ---------- whole-hour pay toggle ---------- */
-  (function(){
-    var tgl=$("payWholeToggle"); if(!tgl) return;
-    tgl.addEventListener("change",function(){
-      if(!state.pay) state.pay={whole:false};
-      state.pay.whole=tgl.checked;
-      save(); renderReport(); renderTrack();
-      if(tgl.checked){ toast("Whole-hour pay on — leftover fractions now ride forward automatically"); checkAchievements(); }
-      else toast("Back to exact fractional pay");
-    });
-  })();
-
   /* ---------- Period Wrapped ---------- */
   var wrapText="";
   function buildWrapped(p){
     var list=entriesFor(p), hrs=sumHours(list);
     var b=periodBounds(p);
-    var whole=!!(state.pay&&state.pay.whole);
-    var pi=whole?payInfoFor(p):null;
-    var payStr=whole?money(pi.payable*state.rate):money(hrs*state.rate);
+    var payStr=money(hrs*state.rate);
     /* per-day + per-desc + per-category */
     var byD={}, byDesc={}, byCat={};
     list.forEach(function(e){
@@ -4515,7 +4456,7 @@
     } else {
       gridHtml='<div class="wrap-grid">'+
         '<div class="wrap-cell"><div class="wrap-big">'+fmtHrs(hrs)+' h</div><div class="wrap-lab">hours logged</div></div>'+
-        '<div class="wrap-cell"><div class="wrap-big gold">'+payStr+'</div><div class="wrap-lab">'+(whole?(pi.payable+" payable hours"):"earned")+'</div></div>'+
+        '<div class="wrap-cell"><div class="wrap-big gold">'+payStr+'</div><div class="wrap-lab">'+"earned"+'</div></div>'+
         '<div class="wrap-cell"><div class="wrap-big">'+days.length+'</div><div class="wrap-lab">day'+(days.length===1?"":"s")+' showed up</div></div>'+
         '<div class="wrap-cell"><div class="wrap-big">'+(busyIso?fmtHrs(busyH)+" h":"—")+'</div><div class="wrap-lab">biggest day'+(busyIso?(" · "+MON[parseISO(busyIso).getMonth()]+" "+parseISO(busyIso).getDate()):"")+'</div></div>'+
       '</div>';
@@ -4526,7 +4467,7 @@
       ln.push(deltaLine);
       linesHtml='<div class="wrap-lines">'+ln.join("<br>")+'</div>';
       var tt=["Period Wrapped — "+periodLabel(p),
-        fmtHrs(hrs)+" h logged · "+payStr+(whole?(" ("+pi.payable+" payable h"+(pi.carryOut>0?(", "+fmtHrs(pi.carryOut)+" h carried)"):")")):""),
+        fmtHrs(hrs)+" h logged · "+payStr,
         days.length+" days worked · biggest day "+(busyIso?(fmtHrs(busyH)+" h on "+MON[parseISO(busyIso).getMonth()]+" "+parseISO(busyIso).getDate()):"—")];
       if(topDesc) tt.push("Headline work: "+topDesc+" ("+fmtHrs(topDescH)+" h)");
       if(topCat) tt.push("Top category: "+topCat);
@@ -4594,12 +4535,11 @@
     toast("Backup saved");
   });
   $("restoreBtn").addEventListener("click",function(ev){ev.preventDefault();$("restoreFile").click();});
-  $("restoreFile").addEventListener("change",function(ev){
-    var f=ev.target.files[0]; if(!f)return;
-    var r=new FileReader();
-    r.onload=function(){
-      try{
-        var s=JSON.parse(r.result);
+  $("pasteBtn").addEventListener("click",function(ev){ev.preventDefault();$("pasteArea").value="";$("pasteModal").classList.add("open");$("pasteArea").focus();});
+  $("pasteCancel").addEventListener("click",function(){$("pasteModal").classList.remove("open");});
+  $("pasteGo").addEventListener("click",function(){var t=$("pasteArea").value.trim();if(!t){toast("Nothing pasted yet");return;}if(applyBackup(t)){$("pasteModal").classList.remove("open");}});
+  function applyBackup(text){try{
+        var s=JSON.parse(text);
         if(!s||typeof s!=="object")throw 0;
         state={
           rate:typeof s.rate==="number"?s.rate:30,
@@ -4617,8 +4557,13 @@
           achievements:(s.achievements&&typeof s.achievements==="object")?s.achievements:{},
           counters:migrateCounters(s.counters)
         };
-        save();renderAll();toast("Backup restored");
-      }catch(e){toast("Couldn't read that file");}
+        save();renderAll();toast("Backup restored");return true;
+      }catch(e){toast("Couldn't read that file");return false;}}
+  $("restoreFile").addEventListener("change",function(ev){
+    var f=ev.target.files[0]; if(!f)return;
+    var r=new FileReader();
+    r.onload=function(){
+      applyBackup(r.result);
     };
     r.readAsText(f);
     ev.target.value="";
@@ -4696,7 +4641,6 @@
     {id:"borough-complete", tier:"legendary", ico:"🧩", name:"Whole Borough",  desc:"Deliver one gene across every breed and pose in your library (2+ breeds)."},
     /* v7: payday + agenda */
     {id:"wrapped-1",    tier:"paw",       ico:"📜", name:"Tale of Two Weeks",  desc:"Open your first Period Wrapped."},
-    {id:"fair-share",   tier:"gold",      ico:"⚖️", name:"Fair Share",         desc:"Turn on whole-hour pay — no half hour left behind."},
     {id:"rally-cat",    tier:"gold",      ico:"⚡", name:"Rally Cat",          desc:"Hit a catch-up button and replan the agenda to save a period."},
     {id:"clean-sweep",  tier:"moonlit",   ico:"🌅", name:"Clean Sweep",        desc:"Finish every item on a day's agenda (2+ items)."},
     /* v11: deeper milestones */
@@ -4817,7 +4761,6 @@
       refs3:state.patterns.some(function(p){return (p.refs||[]).length>=3;}),
       momentum90:momentumValue()>=90, longFocus:+c.longFocus||0, catnaps:+c.catnaps||0,
       wrapped:+c.wrappedOpens||0, catchups:+c.catchups||0,
-      payWhole:!!(state.pay&&state.pay.whole),
       cleanSweeps:Object.keys((c.cleanSweeps&&typeof c.cleanSweeps==="object")?c.cleanSweeps:{}).length,
       boroughComplete:(function(){
         if(state.breeds.length<2||state.patterns.length===0) return false;
@@ -4883,7 +4826,6 @@
     "catnap":function(c){return c.catnaps>=1;},
     "borough-complete":function(c){return c.boroughComplete;},
     "wrapped-1":function(c){return c.wrapped>=1;},
-    "fair-share":function(c){return c.payWhole;},
     "rally-cat":function(c){return c.catchups>=1;},
     "clean-sweep":function(c){return c.cleanSweeps>=1;},
     "hrs-750":function(c){return c.hrs>=750;},
