@@ -179,6 +179,13 @@
   input,select,textarea{font-family:var(--serif);font-size:14px;color:var(--ink);background:var(--inset-bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;outline:none;transition:.16s;width:100%}
   input:focus,select:focus,textarea:focus{border-color:var(--lilac);background:var(--inset-strong)}
   input::placeholder,textarea::placeholder{color:var(--faint)}
+  /* iPad/iOS Safari: strip UA styling from date inputs so they match every other field */
+  input[type="date"]{-webkit-appearance:none;appearance:none;min-height:41px;text-align:left;display:block}
+  input[type="date"]::-webkit-date-and-time-value{text-align:left;margin:0}
+  input[type="date"]::-webkit-calendar-picker-indicator{opacity:.55}
+  /* keep every control in these rows the same height so labels align across the grid */
+  .smart-agenda-controls input,.smart-agenda-controls select,.misc-grid input,.misc-grid select{min-height:41px}
+
   select{cursor:pointer}
   select:disabled{opacity:.4;cursor:not-allowed}
   label.fld{display:block;font-size:11.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
@@ -1169,7 +1176,7 @@
     <div class="brand">
       <div class="moon"></div>
       <div>
-        <h1>PawBorough Productivity Tracker <span class="upgrade-badge v5">v10</span></h1>
+        <h1>PawBorough Productivity Tracker <span class="upgrade-badge v5">v12</span></h1>
       </div>
     </div>
     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
