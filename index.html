@@ -5394,6 +5394,130 @@
   ntInit();
   /* ====== end desktop notifications ====== */
 
+  /* ====== Widget Sync (home-screen kanban via private repo) ====== */
+  var WS_KEY="catafyra_widgetsync_v1";
+  function wsCfg(){
+    var d={on:false,token:"",owner:"catartyay",repo:"pawboard-feed",sha:"",last:""};
+    try{ var o=JSON.parse(localStorage.getItem(WS_KEY)); if(o&&typeof o==="object"){
+      if(typeof o.on==="boolean") d.on=o.on;
+      if(typeof o.token==="string") d.token=o.token;
+      if(typeof o.owner==="string"&&o.owner) d.owner=o.owner;
+      if(typeof o.repo==="string"&&o.repo) d.repo=o.repo;
+      if(typeof o.sha==="string") d.sha=o.sha;
+      if(typeof o.last==="string") d.last=o.last;
+    } }catch(e){}
+    return d;
+  }
+  var wsState=wsCfg(), wsTimer=null, wsBusy=false, wsErr="";
+  function wsSaveCfg(){ try{ localStorage.setItem(WS_KEY,JSON.stringify(wsState)); }catch(e){} }
+
+  function wsPayload(){
+    var cols={todo:[],doing:[],review:[]}, counts={todo:0,doing:0,review:0,delivered:0};
+    var live=state.tasks.filter(function(t){ return !t.archived; });
+    live.forEach(function(t){
+      var st=(t.status==="done")?"delivered":(t.status||"todo");
+      if(counts[st]===undefined) st="todo";
+      counts[st]++;
+      if(st==="delivered") return;
+      cols[st].push(t);
+    });
+    ["todo","doing","review"].forEach(function(st){
+      cols[st].sort(function(a,b){ return (typeof a.boardOrder==="number"?a.boardOrder:0)-(typeof b.boardOrder==="number"?b.boardOrder:0); });
+      cols[st]=cols[st].slice(0,8).map(function(t){
+        var est=+t.estimate||0, hrs=+t.hours||0;
+        return {
+          n:taskName(t),
+          p:t.pri||"",
+          b:!!t.blocked,
+          f:!!t.focus,
+          d:t.dueDate||"",
+          pct:est>0?Math.min(100,Math.round(hrs/est*100)):0
+        };
+      });
+    });
+    return JSON.stringify({v:1,updated:new Date().toISOString(),counts:counts,cols:cols},null,0);
+  }
+
+  function wsB64(str){ return btoa(unescape(encodeURIComponent(str))); }
+  function wsUrl(){ return "https://api.github.com/repos/"+encodeURIComponent(wsState.owner)+"/"+encodeURIComponent(wsState.repo)+"/contents/pawboard.json"; }
+  function wsHeaders(){
+    return {"Accept":"application/vnd.github+json","Authorization":"Bearer "+wsState.token,"Content-Type":"application/json"};
+  }
+  function wsFetchSha(){
+    return fetch(wsUrl(),{headers:wsHeaders()}).then(function(r){
+      if(r.status===404) return "";
+      if(!r.ok) throw new Error("GitHub said "+r.status+" reading the feed");
+      return r.json().then(function(j){ return j&&j.sha?j.sha:""; });
+    });
+  }
+  function wsPut(sha){
+    var body={message:"widget feed "+new Date().toISOString(),content:wsB64(wsPayload())};
+    if(sha) body.sha=sha;
+    return fetch(wsUrl(),{method:"PUT",headers:wsHeaders(),body:JSON.stringify(body)}).then(function(r){
+      if(!r.ok) throw new Error("GitHub said "+r.status+" writing the feed");
+      return r.json();
+    });
+  }
+  function wsPush(manual){
+    if(wsBusy) return;
+    if(!wsState.token){ if(manual) abToast("Add a GitHub token first"); return; }
+    wsBusy=true; wsErr="";
+    var attempt = wsState.sha ? wsPut(wsState.sha) : wsFetchSha().then(wsPut);
+    attempt.catch(function(){ return wsFetchSha().then(wsPut); })
+    .then(function(j){
+      if(j&&j.content&&j.content.sha) wsState.sha=j.content.sha;
+      wsState.last=new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});
+      wsSaveCfg(); wsBusy=false; wsRenderPanel();
+      if(manual) abToast("Widget feed synced");
+    }).catch(function(e){
+      wsBusy=false; wsErr=String(e&&e.message||e); wsRenderPanel();
+      if(manual) abToast("Widget sync failed");
+    });
+  }
+  function wsSchedule(){
+    if(!wsState.on || !wsState.token) return;
+    if(wsTimer) clearTimeout(wsTimer);
+    wsTimer=setTimeout(function(){ wsPush(false); },4000);
+  }
+
+  function wsRenderPanel(){
+    var panel=$("wsPanel"); if(!panel) return;
+    var status="";
+    if(wsErr) status='<span style="color:var(--rose)">'+escapeHtml(wsErr)+'</span>';
+    else if(wsState.last) status='Last sync: '+escapeHtml(wsState.last);
+    else status='Not synced yet';
+    panel.innerHTML=
+      '<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line-soft);font-size:12.5px">'
+      +'<label style="cursor:pointer"><input type="checkbox" id="wsOn" '+(wsState.on?'checked':'')+'> <b>Home-screen widget sync</b></label> '
+      +'<a href="#" id="wsNow" style="color:var(--lilac);margin-left:6px">sync now</a>'
+      +'<div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">'
+      +'<input type="text" id="wsOwner" placeholder="owner" value="'+escapeHtml(wsState.owner)+'" style="background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 8px;width:110px">'
+      +'<input type="text" id="wsRepo" placeholder="private repo" value="'+escapeHtml(wsState.repo)+'" style="background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 8px;width:140px">'
+      +'<input type="password" id="wsToken" placeholder="fine-grained token" value="'+escapeHtml(wsState.token)+'" style="background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 8px;min-width:200px">'
+      +'</div>'
+      +'<div style="margin-top:4px;opacity:.85">'+status+'</div>'
+      +'<div style="margin-top:4px;opacity:.7">Writes pawboard.json into your private repo whenever tasks change. Use a fine-grained token limited to that one repo (Contents: read &amp; write). The token never leaves this device.</div>'
+      +'</div>';
+    if($("wsOn")) $("wsOn").onchange=function(){ wsState.on=this.checked; wsSaveCfg(); wsRenderPanel(); if(wsState.on) wsSchedule(); };
+    if($("wsOwner")) $("wsOwner").onchange=function(){ wsState.owner=this.value.trim()||"catartyay"; wsState.sha=""; wsSaveCfg(); };
+    if($("wsRepo")) $("wsRepo").onchange=function(){ wsState.repo=this.value.trim()||"pawboard-feed"; wsState.sha=""; wsSaveCfg(); };
+    if($("wsToken")) $("wsToken").onchange=function(){ wsState.token=this.value.trim(); wsSaveCfg(); wsRenderPanel(); };
+    if($("wsNow")) $("wsNow").onclick=function(e){ e.preventDefault(); wsPush(true); };
+  }
+
+  function wsInit(){
+    var anchor=$("ntPanel")||$("abPanel")||$("backupBtn");
+    if(anchor){
+      var box=document.createElement("div"); box.id="wsPanel";
+      anchor.parentNode.insertBefore(box, anchor.nextSibling);
+    }
+    wsRenderPanel();
+    var _wsOrigSave=save;
+    save=function(){ _wsOrigSave(); wsSchedule(); };
+  }
+  wsInit();
+  /* ====== end widget sync ====== */
+
 })();
 </script>
 </body>
